@@ -1,5 +1,14 @@
 ﻿[CmdletBinding()]
-param ()
+param (
+    # Defines the git username
+    [Parameter(Mandatory=$false)]
+    [string]
+    $GitUserName,
+    # Defines the git email
+    [Parameter(Mandatory=$false)]
+    [string]
+    $GitUserEmail
+)
 
 $ErrorActionPreference = 'Stop';
 
@@ -37,18 +46,23 @@ if (-not ((Get-PackageSource -Name chocolatey).IsTrusted)) {
 }
 
 Write-Progress -Activity "Setting git identity"
-$userName = (Get-WmiObject Win32_Process -Filter "Handle = $Pid").GetRelated("Win32_LogonSession").GetRelated("Win32_UserAccount").FullName
+
+$userName = $GitUserName
+if (!$userName) {
+    $userName = (Get-WmiObject Win32_Process -Filter "Handle = $Pid").GetRelated("Win32_LogonSession").GetRelated("Win32_UserAccount").FullName
+    $userName = if ($value = Read-Host -Prompt "Git user.name to be used ($userName)") { $value } else { $userName }
+}
 Write-Verbose "Setting git user.name to $userName"
 git config --global user.name $userName
-# This seems to the be MSA that was first used during Windows setup
-$userEmail = (Get-WmiObject -Class Win32_ComputerSystem).PrimaryOwnerName
+
+$userEmail = $GitUserEmail
+if (!$userEmail) {
+    # This seems to the be MSA that was first used during Windows setup
+    $userEmail = (Get-WmiObject -Class Win32_ComputerSystem).PrimaryOwnerName
+    $userEmail = if ($value = Read-Host -Prompt "Git user.email to be used ($userEmail)") { $value } else { $userEmail }
+}
 Write-Verbose "Setting git user.email to $userEmail"
 git config --global user.email $userEmail
-
-Write-Progress -Activity "Setting git push behaviour to squelch the 2.0 upgrade message"
-if ((& git config push.default) -eq $null) {
-    git config --global push.default simple
-}
 
 Write-Progress -Activity "Setting git aliases"
 git config --global alias.st "status"
