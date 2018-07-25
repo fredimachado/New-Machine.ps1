@@ -20,9 +20,11 @@ if (-not $IsAdmin) {
 Write-Progress -Activity "Setting execution policy"
 Set-ExecutionPolicy RemoteSigned
 
-Write-Progress -Activity "Ensuring PS profile exists"
+Write-Progress -Activity "Download PowerShell profile if it doesn't exist"
 if (-not (Test-Path $PROFILE)) {
-    New-Item $PROFILE -Force
+    $MyPSProfileUrl = "https://raw.githubusercontent.com/fredimachado/New-Machine.ps1/fredi/Microsoft.PowerShell_profile.ps1"
+    Invoke-WebRequest -Uri $MyPSProfileUrl -OutFile $PROFILE
+}
 }
 
 Write-Progress -Activity "Ensuring Chocolatey is available"
