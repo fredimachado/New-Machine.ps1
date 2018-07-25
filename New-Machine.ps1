@@ -78,34 +78,6 @@ Write-Progress -Activity "Installing PoshGit"
 Install-Module posh-git -Scope CurrentUser
 Add-PoshGitToProfile
 
-Write-Progress -Activity "Enabling Office smileys"
-if (Test-Path HKCU:\Software\Microsoft\Office\16.0) {
-    if (-not (Test-Path HKCU:\Software\Microsoft\Office\16.0\Common\Feedback)) {
-        New-Item HKCU:\Software\Microsoft\Office\16.0\Common\Feedback -ItemType Directory
-    }
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Common\Feedback -Name Enabled -Value 1
-}
-else {
-    Write-Warning "Couldn't find a compatible install of Office"
-}
-
-Write-Progress -Activity "Disabling Outlook notifications"
-if (Test-Path HKCU:\Software\Microsoft\Office\16.0\Outlook\Preferences) {
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Outlook\Preferences -Name ChangePointer -Value 0
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Outlook\Preferences -Name NewmailDesktopAlerts -Value 0
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Outlook\Preferences -Name PlaySound -Value 0
-    Set-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Outlook\Preferences -Name ShowEnvelope -Value 0
-}
-else {
-    Write-Warning "Couldn't find a compatible install of Office"
-}
-
-Write-Progress "Hiding desktop icons"
-if ((Get-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\).HideIcons -ne 1) {
-    Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ -Name HideIcons -Value 1
-    Get-Process explorer | Stop-Process
-}
-
 Write-Progress "Enabling PowerShell on Win+X"
 if ((Get-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\).DontUsePowerShellOnWinX -ne 0) {
     Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ -Name DontUsePowerShellOnWinX -Value 0
@@ -121,9 +93,6 @@ Write-Progress "Making c:\temp"
 if (-not (Test-Path c:\temp)) {
     New-Item c:\temp -ItemType Directory
 }
-
-Write-Progress "Enabling Windows Subsystem for Linux"
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 
 Write-Progress -Activity "Reloading PS profile"
 . $PROFILE
