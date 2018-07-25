@@ -25,6 +25,12 @@ if (-not (Test-Path $PROFILE)) {
     $MyPSProfileUrl = "https://raw.githubusercontent.com/fredimachado/New-Machine.ps1/fredi/Microsoft.PowerShell_profile.ps1"
     Invoke-WebRequest -Uri $MyPSProfileUrl -OutFile $PROFILE
 }
+
+Write-Progress -Activity "Download .gitconfig if it doesn't exist"
+$GitConfigPath = "$env:HOME\.gitconfig"
+if (-not (Test-Path $GitConfigPath)) {
+    $MyGitConfigUrl = "https://raw.githubusercontent.com/fredimachado/dotfiles/master/.gitconfig"
+    Invoke-WebRequest -Uri $MyGitConfigUrl -OutFile $GitConfigPath
 }
 
 Write-Progress -Activity "Ensuring Chocolatey is available"
@@ -66,15 +72,6 @@ if (!$userEmail) {
 }
 Write-Verbose "Setting git user.email to $userEmail"
 git config --global user.email $userEmail
-
-Write-Progress -Activity "Setting git aliases"
-git config --global alias.st "status"
-git config --global alias.co "checkout"
-git config --global alias.df "diff"
-git config --global alias.lg "log --graph --oneline --decorate"
-
-Write-Progress -Activity "Setting VS Code as the Git editor"
-git config --global core.editor "code --wait"
 
 Write-Progress -Activity "Installing PoshGit"
 Install-Module posh-git -Scope CurrentUser
