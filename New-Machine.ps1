@@ -32,7 +32,7 @@ if (-not (Test-Path $PROFILE)) {
 }
 
 Write-Progress -Activity "Download .gitconfig if it doesn't exist"
-$GitConfigPath = "$env:HOME\.gitconfig"
+$GitConfigPath = "$env:HOMEDRIVE$env:HOMEPATH\.gitconfig"
 if (-not (Test-Path $GitConfigPath)) {
     $MyGitConfigUrl = "https://raw.githubusercontent.com/fredimachado/dotfiles/master/.gitconfig"
     Invoke-WebRequest -Uri $MyGitConfigUrl -OutFile $GitConfigPath -UseBasicParsing
