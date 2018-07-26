@@ -48,8 +48,9 @@ if (-not ((Get-PackageSource -Name chocolatey).IsTrusted)) {
     "fiddler4",
     "slack",
     "conemu",
-    "github-desktop"
-) | % {
+    "github-desktop",
+    "7zip"
+) | ForEach-Object {
     Write-Progress -Activity "Installing $_"
     Install-Package -Name $_ -ProviderName chocolatey
 }
