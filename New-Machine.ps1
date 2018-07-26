@@ -27,14 +27,14 @@ Set-ExecutionPolicy RemoteSigned
 Write-Progress -Activity "Download PowerShell profile if it doesn't exist"
 if (-not (Test-Path $PROFILE)) {
     $MyPSProfileUrl = "https://raw.githubusercontent.com/fredimachado/New-Machine.ps1/fredi/Microsoft.PowerShell_profile.ps1"
-    Invoke-WebRequest -Uri $MyPSProfileUrl -OutFile $PROFILE
+    Invoke-WebRequest -Uri $MyPSProfileUrl -OutFile $PROFILE -UseBasicParsing
 }
 
 Write-Progress -Activity "Download .gitconfig if it doesn't exist"
 $GitConfigPath = "$env:HOME\.gitconfig"
 if (-not (Test-Path $GitConfigPath)) {
     $MyGitConfigUrl = "https://raw.githubusercontent.com/fredimachado/dotfiles/master/.gitconfig"
-    Invoke-WebRequest -Uri $MyGitConfigUrl -OutFile $GitConfigPath
+    Invoke-WebRequest -Uri $MyGitConfigUrl -OutFile $GitConfigPath -UseBasicParsing
 }
 
 Write-Progress -Activity "Ensuring Chocolatey is available"
