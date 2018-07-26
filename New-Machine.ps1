@@ -91,6 +91,9 @@ Add-PoshGitToProfile
 Write-Progress -Activity "Hide search box from the taskbar"
 Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name SearchboxTaskbarMode -Value 0
 
+Write-Progress -Activity "Set Windows Explorer to start on This PC instead of Quick Access"
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Value 1
+
 Write-Progress -Activity "Enabling PowerShell on Win+X"
 Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DontUsePowerShellOnWinX -Value 0
 
