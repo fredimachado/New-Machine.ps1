@@ -94,6 +94,9 @@ Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name Se
 Write-Progress -Activity "Set Windows Explorer to start on This PC instead of Quick Access"
 Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Value 1
 
+Write-Progress -Activity "Don't hide extensions for known file types"
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name HideFileExt -Value 0
+
 Write-Progress -Activity "Enabling PowerShell on Win+X"
 Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DontUsePowerShellOnWinX -Value 0
 
