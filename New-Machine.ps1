@@ -7,7 +7,11 @@ param (
     # Defines the git email
     [Parameter(Mandatory=$false)]
     [string]
-    $GitUserEmail
+    $GitUserEmail,
+    # Feel like cleaning the desktop?
+    [Parameter(Mandatory=$false)]
+    [switch]
+    $CleanDesktop
 )
 
 $ErrorActionPreference = 'Stop';
@@ -102,6 +106,10 @@ Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanc
 
 Write-Progress "Closing explorer to start using last changes"
 Get-Process explorer | Stop-Process
+
+if ($CleanDesktop) {
+    Remove-Item "$env:PUBLIC\Desktop\*.lnk"
+    Remove-Item "$env:USERPROFILE\Desktop\*.lnk"
 }
 
 Write-Progress "Making c:\code"
