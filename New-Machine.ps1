@@ -59,6 +59,18 @@ if (-not ((Get-PackageSource -Name chocolatey).IsTrusted)) {
     Install-Package -Name $_ -ProviderName chocolatey
 }
 
+Write-Progress -Activity "Installing VS Code extensions"
+@(
+    "ms-vscode.csharp",
+    "ms-vscode.powershell",
+    "jchannon.csharpextensions",
+    "k--kato.docomment",
+    "editorconfig.editorconfig"
+) | ForEach-Object {
+    Write-Progress -Activity "Installing $_"
+    & code --install-extension $_
+}
+
 Write-Progress -Activity "Uninstalling unwanted apps"
 @(
     "SkypeApp",
