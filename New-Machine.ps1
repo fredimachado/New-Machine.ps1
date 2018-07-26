@@ -88,10 +88,11 @@ Write-Progress -Activity "Installing PoshGit"
 Install-Module posh-git -Scope CurrentUser
 Add-PoshGitToProfile
 
-Write-Progress "Enabling PowerShell on Win+X"
-if ((Get-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\).DontUsePowerShellOnWinX -ne 0) {
-    Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ -Name DontUsePowerShellOnWinX -Value 0
-    Get-Process explorer | Stop-Process
+Write-Progress -Activity "Enabling PowerShell on Win+X"
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DontUsePowerShellOnWinX -Value 0
+
+Write-Progress "Closing explorer to start using last changes"
+Get-Process explorer | Stop-Process
 }
 
 Write-Progress "Making c:\code"
