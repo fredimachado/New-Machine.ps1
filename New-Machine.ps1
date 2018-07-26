@@ -54,6 +54,16 @@ if (-not ((Get-PackageSource -Name chocolatey).IsTrusted)) {
     Install-Package -Name $_ -ProviderName chocolatey
 }
 
+Write-Progress -Activity "Uninstalling unwanted apps"
+@(
+    "SkypeApp",
+    "Solitaire",
+    "Zune"
+) | ForEach-Object {
+    Write-Progress -Activity "Uninstalling $_"
+    Get-AppxPackage *$_* | Remove-AppxPackage
+}
+
 Write-Progress -Activity "Setting git identity"
 
 $userName = $GitUserName
