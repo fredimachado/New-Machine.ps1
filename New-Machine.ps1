@@ -1,4 +1,5 @@
-﻿[CmdletBinding()]
+﻿# Some steps on this script were based on https://github.com/mauro-dasilva/MachineSetup/blob/master/Windows/SetupPC.ps1
+[CmdletBinding()]
 param (
     # Defines the git username
     [Parameter(Mandatory=$false)]
@@ -28,23 +29,20 @@ Write-Progress -Activity "Download PowerShell profile if it doesn't exist"
 if (-not (Test-Path $PROFILE)) {
     New-Item $PROFILE -Force
     $MyPSProfileUrl = "https://raw.githubusercontent.com/fredimachado/New-Machine.ps1/fredi/Microsoft.PowerShell_profile.ps1"
-    Invoke-WebRequest -Uri $MyPSProfileUrl -OutFile $PROFILE -UseBasicParsing
+    Invoke-WebRequest -Uri $MyPSProfileUrl -OutFile $PROFILE -UseBasicParsing | Out-Null
 }
 
 Write-Progress -Activity "Download .gitconfig if it doesn't exist"
 $GitConfigPath = "$env:HOMEDRIVE$env:HOMEPATH\.gitconfig"
 if (-not (Test-Path $GitConfigPath)) {
     $MyGitConfigUrl = "https://raw.githubusercontent.com/fredimachado/dotfiles/master/.gitconfig"
-    Invoke-WebRequest -Uri $MyGitConfigUrl -OutFile $GitConfigPath -UseBasicParsing
+    Invoke-WebRequest -Uri $MyGitConfigUrl -OutFile $GitConfigPath -UseBasicParsing | Out-Null
 }
 
-Write-Progress -Activity "Ensuring Chocolatey is available"
-$null = Get-PackageProvider -Name chocolatey
+Write-Progress -Activity "Installing Chocolatey"
+Invoke-Expression ((New-Object net.webclient).DownloadString('https://chocolatey.org/install.ps1')) | Out-Null
+Import-Module $env:chocolateyinstall\helpers\chocolateyInstaller.psm1 | Out-Null
 
-Write-Progress -Activity "Ensuring Chocolatey is trusted"
-if (-not ((Get-PackageSource -Name chocolatey).IsTrusted)) {
-    Set-PackageSource -Name chocolatey -Trusted
-}
 
 @(
     "googlechrome",
@@ -56,7 +54,7 @@ if (-not ((Get-PackageSource -Name chocolatey).IsTrusted)) {
     "7zip"
 ) | ForEach-Object {
     Write-Progress -Activity "Installing $_"
-    Install-Package -Name $_ -ProviderName chocolatey
+    choco install $_ -y
 }
 
 Write-Progress -Activity "Installing VS Code extensions"
