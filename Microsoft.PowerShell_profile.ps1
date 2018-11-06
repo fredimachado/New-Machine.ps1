@@ -1,3 +1,5 @@
+Import-Module posh-git
+
 # PoshGit settings
 $Global:GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
 $Global:GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true

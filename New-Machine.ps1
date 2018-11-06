@@ -102,7 +102,6 @@ git config --global user.email $userEmail
 
 Write-Progress -Activity "Installing PoshGit"
 Install-Module posh-git -Scope CurrentUser
-Add-PoshGitToProfile
 
 Write-Progress -Activity "Hide search box from the taskbar"
 Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name SearchboxTaskbarMode -Value 0
