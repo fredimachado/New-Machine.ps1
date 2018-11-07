@@ -114,7 +114,7 @@ Write-Progress -Activity "Setting git identity"
 
 $userName = $GitUserName
 if (!$userName) {
-    $userName = (Get-WmiObject Win32_Process -Filter "Handle = $Pid").GetRelated("Win32_LogonSession").GetRelated("Win32_UserAccount").FullName
+    $userEmail = git config --global user.name
     $userName = if ($value = Read-Host -Prompt "Git user.name to be used ($userName)") { $value } else { $userName }
 }
 Write-Verbose "Setting git user.name to $userName"
@@ -122,8 +122,7 @@ git config --global user.name $userName
 
 $userEmail = $GitUserEmail
 if (!$userEmail) {
-    # This seems to the be MSA that was first used during Windows setup
-    $userEmail = (Get-WmiObject -Class Win32_ComputerSystem).PrimaryOwnerName
+    $userEmail = git config --global user.email
     $userEmail = if ($value = Read-Host -Prompt "Git user.email to be used ($userEmail)") { $value } else { $userEmail }
 }
 Write-Verbose "Setting git user.email to $userEmail"
