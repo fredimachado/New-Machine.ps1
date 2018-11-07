@@ -15,7 +15,7 @@ param (
     $CleanDesktop
 )
 
-$ErrorActionPreference = 'Stop';
+$ErrorActionPreference = 'SilentlyContinue';
 
 $IsAdmin = (New-Object System.Security.Principal.WindowsPrincipal([System.Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $IsAdmin) {
@@ -79,10 +79,35 @@ Write-Progress -Activity "Uninstalling unwanted apps"
 @(
     "SkypeApp",
     "Solitaire",
-    "Zune"
+    "Zune",
+    "Microsoft.BingFinance",
+    "Microsoft.BingNews",
+    "Microsoft.BingSports",
+    "Microsoft.BingWeather",
+    "Microsoft.Getstarted",
+    "Microsoft.MicrosoftOfficeHub",
+    "Microsoft.OneConnect",
+    "Microsoft.WindowsAlarms",
+    "Microsoft.WindowsCamera",
+    "Microsoft.WindowsMaps",
+    "Microsoft.WindowsPhone",
+    "Microsoft.Messaging",
+    "Microsoft.OneConnect",
+    "Microsoft.Print3D",
+    "Microsoft.GetHelp"
 ) | ForEach-Object {
     Write-Progress -Activity "Uninstalling $_"
-    Get-AppxPackage *$_* | Remove-AppxPackage
+
+    $PackageFullName = (Get-AppxPackage $_).PackageFullName
+    $ProPackageFullName = (Get-AppxProvisionedPackage -online | Where-Object {$_.Displayname -eq $_}).PackageName
+
+    if ($PackageFullName) {
+        Remove-AppxPackage -Package $PackageFullName | Out-Null
+    }
+
+    if ($ProPackageFullName) {
+        Remove-AppxProvisionedPackage -Online -PackageName $ProPackageFullName | Out-Null
+    }
 }
 
 Write-Progress -Activity "Setting git identity"
@@ -137,5 +162,19 @@ if (-not (Test-Path c:\temp)) {
     New-Item c:\temp -ItemType Directory
 }
 
+Write-Progress -Activity "Removing windows features"
+@(
+    "MediaPlayback",
+    "FaxServicesClientPackage",
+    "Printing-Foundation-InternetPrinting-Client"
+) | ForEach-Object {
+    Write-Progress -Activity "Removing feature: $_"
+    Disable-WindowsOptionalFeature -Online -FeatureName $_ -NoRestart -ErrorAction SilentlyContinue | Out-Null
+}
+
+Write-Progress -Activity "Cleaning up temp folders"
+$Tempfolders = @("C:\Windows\Temp\*", "C:\Windows\Prefetch\*", "C:\Users\*\Appdata\Local\Temp\*")
+Remove-Item $Tempfolders -Force -Recurse -ErrorAction SilentlyContinue
+
 Write-Progress -Activity "Reloading PS profile"
-. $PROFILE
+.$PROFILE
