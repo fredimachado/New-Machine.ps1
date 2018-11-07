@@ -132,16 +132,33 @@ Write-Progress -Activity "Installing PoshGit"
 Install-Module posh-git -Scope CurrentUser
 
 Write-Progress -Activity "Hide search box from the taskbar"
-Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name SearchboxTaskbarMode -Value 0
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name SearchboxTaskbarMode -Value 0 -ErrorAction SilentlyContinue
 
 Write-Progress -Activity "Set Windows Explorer to start on This PC instead of Quick Access"
-Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Value 1
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Value 1 -ErrorAction SilentlyContinue
 
 Write-Progress -Activity "Don't hide extensions for known file types"
-Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name HideFileExt -Value 0
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name HideFileExt -Value 0 -ErrorAction SilentlyContinue
 
-Write-Progress -Activity "Enabling PowerShell on Win+X"
-Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DontUsePowerShellOnWinX -Value 0
+Write-Progress -Activity "Remove suggested apps"
+Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content" -Name DisableWindowsConsumerFeatures -Value 1 -ErrorAction SilentlyContinue
+
+Write-Progress -Activity "Do not track on Edge"
+Set-ItemProperty HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main -Name DoNotTrack -Value 1 -ErrorAction SilentlyContinue
+
+Write-Progress -Activity "Hide task view button"
+Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowTaskViewButton -Value 0 -ErrorAction SilentlyContinue
+
+Write-Progress -Activity "Show details when copying files"
+New-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager -ErrorAction SilentlyContinue
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager -Name EnthusiastMode -Value 1 -ErrorAction SilentlyContinue
+
+Write-Progress -Activity "Hide recent shortcuts"
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Value 0 -ErrorAction SilentlyContinue
+
+Write-Progress -Activity "Hide the My People icon in the taskbar"
+Set-ItemProperty HKCU:\Software\Policies\Microsoft\Windows\Explorer -Name HidePeopleBar -Value 1 -ErrorAction SilentlyContinue
 
 Write-Progress "Closing explorer to start using last changes"
 Get-Process explorer | Stop-Process
