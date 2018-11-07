@@ -54,8 +54,11 @@ Update-SessionEnvironment
     "vscode",
     "slack",
     "conemu",
-    "github-desktop",
-    "7zip"
+    "7zip.install",
+    "sysinternals",
+    "vlc",
+    "sql-server-management-studio",
+    "github-desktop"
 ) | ForEach-Object {
     Write-Progress -Activity "Installing $_"
     choco install $_ -y
@@ -69,7 +72,8 @@ Write-Progress -Activity "Installing VS Code extensions"
     "ms-vscode.powershell",
     "jchannon.csharpextensions",
     "k--kato.docomment",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+    "msjsdiag.debugger-for-chrome"
 ) | ForEach-Object {
     Write-Progress -Activity "Installing $_"
     & code --install-extension $_
