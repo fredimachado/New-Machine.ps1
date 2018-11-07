@@ -43,6 +43,10 @@ Write-Progress -Activity "Installing Chocolatey"
 Invoke-Expression ((New-Object net.webclient).DownloadString('https://chocolatey.org/install.ps1')) | Out-Null
 Import-Module $env:chocolateyinstall\helpers\chocolateyInstaller.psm1 | Out-Null
 
+Write-Progress -Activity "Setting up Environment Variables"
+
+[Environment]::SetEnvironmentVariable('ChocolateyToolsLocation', ${env:ProgramFiles(x86)}, "User")
+Update-SessionEnvironment
 
 @(
     "googlechrome",
@@ -56,6 +60,8 @@ Import-Module $env:chocolateyinstall\helpers\chocolateyInstaller.psm1 | Out-Null
     Write-Progress -Activity "Installing $_"
     choco install $_ -y
 }
+
+Update-SessionEnvironment
 
 Write-Progress -Activity "Installing VS Code extensions"
 @(
