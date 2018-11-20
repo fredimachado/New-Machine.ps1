@@ -181,7 +181,10 @@ Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name 
 Set-ItemProperty HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Value 0 -ErrorAction SilentlyContinue
 
 Write-Progress -Activity "Hide the My People icon in the taskbar"
-Set-ItemProperty HKCU:\Software\Policies\Microsoft\Windows\Explorer -Name HidePeopleBar -Value 1 -ErrorAction SilentlyContinue
+if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People")) {
+    New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" | Out-Null
+}
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWORD -Value 0
 
 Write-Progress "Closing explorer to start using last changes"
 Get-Process explorer | Stop-Process
