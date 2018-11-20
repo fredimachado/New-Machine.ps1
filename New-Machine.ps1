@@ -81,9 +81,16 @@ Write-Progress -Activity "Installing VS Code extensions"
 
 Write-Progress -Activity "Uninstalling unwanted apps"
 @(
-    "SkypeApp",
-    "Solitaire",
-    "Zune",
+    "2414FC7A.Viber",
+    "89006A2E.AutodeskSketchBook",
+    "A278AB0D.DisneyMagicKingdoms",
+    "A278AB0D.MarchofEmpires",
+    "king.com.BubbleWitch3Saga",
+    "king.com.CandyCrushSodaSaga",
+    "Microsoft.3DBuilder",
+    "Microsoft.AppConnector",
+    "Microsoft.CommsPhone",
+    "Microsoft.ConnectivityStore",
     "Microsoft.BingFinance",
     "Microsoft.BingNews",
     "Microsoft.BingSports",
@@ -96,9 +103,21 @@ Write-Progress -Activity "Uninstalling unwanted apps"
     "Microsoft.WindowsMaps",
     "Microsoft.WindowsPhone",
     "Microsoft.Messaging",
+    "Microsoft.Microsoft3DViewer",
     "Microsoft.OneConnect",
     "Microsoft.Print3D",
-    "Microsoft.GetHelp"
+    "Microsoft.GetHelp",
+    "Microsoft.SkypeApp",
+    "Microsoft.XboxApp",
+    "Microsoft.XboxIdentityProvider",
+    "Microsoft.XboxSpeechToTextOverlay",
+    "Microsoft.XboxGameOverlay",
+    "Microsoft.XboxGamingOverlay",
+    "Microsoft.Xbox.TCUI",
+    "Microsoft.XboxGameCallableUI",
+    "Microsoft.ZuneMusic",
+    "Microsoft.ZuneVideo",
+    "Microsoft.MicrosoftSolitaireCollection"
 ) | ForEach-Object {
     Write-Progress -Activity "Uninstalling $_"
 
@@ -106,11 +125,11 @@ Write-Progress -Activity "Uninstalling unwanted apps"
     $ProPackageFullName = (Get-AppxProvisionedPackage -online | Where-Object {$_.Displayname -eq $_}).PackageName
 
     if ($PackageFullName) {
-        Remove-AppxPackage -Package $PackageFullName | Out-Null
+        Remove-AppxPackage -Package $PackageFullName -ErrorAction SilentlyContinue | Out-Null
     }
 
     if ($ProPackageFullName) {
-        Remove-AppxProvisionedPackage -Online -PackageName $ProPackageFullName | Out-Null
+        Remove-AppxProvisionedPackage -Online -PackageName $ProPackageFullName -ErrorAction SilentlyContinue | Out-Null
     }
 }
 
